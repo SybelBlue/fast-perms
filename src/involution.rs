@@ -37,6 +37,6 @@ pub trait FromInvolutions {
     fn from_involutions(left: &Involution, right: &Involution) -> Self;
 }
 
-// #[derive(Debug, PartialEq, Clone)]
-// pub struct InvlSeq(Vec<Involution>);
+#[derive(Debug, PartialEq, Clone)]
+pub struct InvlSeq(Vec<Involution>);
 

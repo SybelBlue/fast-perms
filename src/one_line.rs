@@ -1,6 +1,6 @@
 use std::usize;
 
-use crate::{involution::*, traits::*, utils::{new_boxed_slice, SUPER_PERM6}};
+use crate::{involution::*, traits::*, group_generators::{new_boxed_slice, SUPER_PERM6}};
 
 #[derive(Debug, PartialEq, Clone)]
 pub struct OneLine(pub Box<[u8]>);

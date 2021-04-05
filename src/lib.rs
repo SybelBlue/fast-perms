@@ -1,6 +1,6 @@
 pub mod traits;
 
-pub mod utils;
+pub mod group_generators;
 
 pub mod one_line;
 pub mod involution;
