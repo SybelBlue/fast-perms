@@ -1,15 +1,25 @@
 use crate::traits::*;
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq)]
 pub struct OneLine(pub Box<[u8]>);
 
 pub fn new_boxed_slice(size: usize) -> Box<[u8]> {
     Vec::with_capacity(size).into_boxed_slice()
 }
 
+impl OneLine {
+    pub fn new(data: Vec<u8>) -> Self {
+        OneLine(data.into_boxed_slice())
+    }
+}
+
 impl Permutation for OneLine {
     fn apply(&self, v: u8) -> u8 {
-        self.0[v as usize]
+        if v > 0 && v <= self.0.len() as u8 {
+            self.0[v as usize - 1]
+        } else {
+            v
+        }
     }
 
     fn order(&self) -> u8 {
@@ -29,5 +39,15 @@ impl Permutation for OneLine {
 impl Identity for OneLine {
     fn identity(ord: u8) -> Self {
         OneLine((1..=ord).collect::<Vec<u8>>().into_boxed_slice())
+    }
+
+    /// O(n)
+    fn is_identity(&self) -> bool {
+        for (i, d) in self.0.iter().enumerate() {
+            if i as u8 + 1 != *d {
+                return false;
+            }
+        }
+        true
     }
 }

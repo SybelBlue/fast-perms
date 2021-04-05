@@ -15,6 +15,7 @@ pub trait Invertible {
 
 pub trait Identity {
     fn identity(ord: u8) -> Self;
+    fn is_identity(&self) -> bool;
 }
 
 // pub(crate) trait WellOrdered {}
