@@ -1,6 +1,7 @@
 pub mod traits;
 
 pub mod one_line;
+pub mod involution;
 
 #[cfg(test)]
 mod test {
