@@ -37,17 +37,6 @@ impl Mapping for OneLine {
     }
 }
 
-impl Composable<OneLine> for OneLine {
-    fn compose(&self, right: &Self) -> OneLine {
-        let ord = self.order().max(right.order());
-        let mut data: Box<[u8]> = new_boxed_slice(ord as usize);
-        for (i, d) in data.iter_mut().enumerate() {
-            *d = self.apply(right.apply(i as u8 + 1));
-        }
-        OneLine(data)
-    }
-}
-
 impl Identity for OneLine {
     fn identity(ord: u8) -> Self {
         OneLine((1..=ord).collect::<Vec<u8>>().into_boxed_slice())
@@ -68,6 +57,17 @@ impl FromInvolutions for OneLine {
     fn from_involutions(left: &Involution, right: &Involution) -> Self {
         let ord = left.order().max(right.order());
         OneLine::new((1..=ord).map(|v| left.apply(right.apply(v))).collect())
+    }
+}
+
+impl<T> Composable<OneLine> for T where T : Mapping {
+    fn compose(&self, right: &Self) -> OneLine {
+        let ord = self.order().max(right.order());
+        let mut data: Box<[u8]> = new_boxed_slice(ord as usize);
+        for (i, d) in data.iter_mut().enumerate() {
+            *d = self.apply(right.apply(i as u8 + 1));
+        }
+        OneLine(data)
     }
 }
 
