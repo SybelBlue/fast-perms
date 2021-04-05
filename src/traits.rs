@@ -13,4 +13,8 @@ pub trait Invertible {
     fn inverse(&self) -> &Self;
 }
 
+pub trait Identity {
+    fn identity(ord: u8) -> Self;
+}
+
 // pub(crate) trait WellOrdered {}
