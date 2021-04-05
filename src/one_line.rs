@@ -1,6 +1,6 @@
 use std::usize;
 
-use crate::{involution::*, traits::*, utils::{new_boxed_slice, super_perm6}};
+use crate::{involution::*, traits::*, utils::{new_boxed_slice, SUPER_PERM6}};
 
 #[derive(Debug, PartialEq, Clone)]
 pub struct OneLine(pub Box<[u8]>);
@@ -93,12 +93,12 @@ impl Identity for OneLineSlice {
         if ord > 6 {
             todo!("ord 7 and greater Slices don't exist")
         } else {
-            OneLineSlice(&super_perm6[0..ord as usize])
+            OneLineSlice(&SUPER_PERM6[0..ord as usize])
         }
     }
 
     /// O(n)
     fn is_identity(&self) -> bool {
-        self.0.as_ptr() == &super_perm6[0]
+        self.0.as_ptr() == &SUPER_PERM6[0]
     }
 }
