@@ -1,5 +1,6 @@
 pub trait Mapping {
     /// `v` may be in range [`1`, `self.order()`]
+    /// may panic if `v == 0`
     fn apply(&self, v: u8) -> u8;
 
     /// The n in S_n

@@ -25,7 +25,7 @@ impl OneLine {
 
 impl Mapping for OneLine {
     fn apply(&self, v: u8) -> u8 {
-        if v > 0 && v <= self.0.len() as u8 {
+        if v <= self.0.len() as u8 {
             self.0[v as usize - 1]
         } else {
             v
