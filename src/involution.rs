@@ -32,3 +32,7 @@ impl Mapping for Involution {
         self.1
     }
 }
+
+pub trait FromInvolutions {
+    fn from_involutions(left: &Involution, right: &Involution) -> Self;
+}

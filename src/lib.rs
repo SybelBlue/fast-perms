@@ -6,7 +6,7 @@ pub mod involution;
 #[cfg(test)]
 mod test {
     mod one_line {
-        use crate::one_line::*;
+        use crate::{involution::{FromInvolutions, Involution}, one_line::*};
         use crate::traits::*;
 
         #[test]
@@ -33,6 +33,19 @@ mod test {
                     }
                 }
             }
+        }
+
+        #[test]
+        fn from_involutions() {
+            assert_eq!(
+                OneLine::from_involutions(&Involution::new(1, 2), &Involution::new(2, 3)),
+                OneLine(Box::new([2, 3, 1]))
+            );
+            assert_eq!(
+                OneLine::from_involutions(&Involution::new(1, 2), &Involution::new(1, 3)),
+                OneLine(Box::new([3, 1, 2]))
+            );
+            assert_eq!(OneLine::from_involutions(&Involution::new(1, 3), &Involution::new(1, 3)), OneLine::identity(3));
         }
     }
 }

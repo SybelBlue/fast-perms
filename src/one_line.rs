@@ -1,6 +1,6 @@
 use std::usize;
 
-use crate::traits::*;
+use crate::{involution::*, traits::*};
 
 #[derive(Debug, PartialEq, Clone)]
 pub struct OneLine(pub Box<[u8]>);
@@ -65,5 +65,12 @@ impl Identity for OneLine {
             }
         }
         true
+    }
+}
+
+impl FromInvolutions for OneLine {
+    fn from_involutions(left: &Involution, right: &Involution) -> Self {
+        let ord = left.order().max(right.order());
+        OneLine::new((1..=ord).map(|v| left.apply(right.apply(v))).collect())
     }
 }
