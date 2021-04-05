@@ -1,13 +1,9 @@
 use std::usize;
 
-use crate::{involution::*, traits::*};
+use crate::{involution::*, traits::*, utils::new_boxed_slice};
 
 #[derive(Debug, PartialEq, Clone)]
 pub struct OneLine(pub Box<[u8]>);
-
-pub fn new_boxed_slice(size: usize) -> Box<[u8]> {
-    Vec::with_capacity(size).into_boxed_slice()
-}
 
 impl OneLine {
     pub fn new(data: Vec<u8>) -> Self {

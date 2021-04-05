@@ -2,7 +2,7 @@ use std::fmt::Display;
 
 use crate::traits::Mapping;
 
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, PartialEq, Clone, Copy)]
 pub struct Involution(u8, u8);
 
 impl Involution {
@@ -36,3 +36,7 @@ impl Mapping for Involution {
 pub trait FromInvolutions {
     fn from_involutions(left: &Involution, right: &Involution) -> Self;
 }
+
+// #[derive(Debug, PartialEq, Clone)]
+// pub struct InvlSeq(Vec<Involution>);
+
