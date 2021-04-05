@@ -4,6 +4,7 @@ pub mod group_generators;
 
 pub mod one_line;
 pub mod involution;
+pub mod perm64;
 
 #[cfg(test)]
 mod test {
