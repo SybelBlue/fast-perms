@@ -2,7 +2,7 @@ use std::usize;
 
 use crate::traits::*;
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Clone)]
 pub struct OneLine(pub Box<[u8]>);
 
 pub fn new_boxed_slice(size: usize) -> Box<[u8]> {
@@ -27,7 +27,7 @@ impl OneLine {
     }
 }
 
-impl Permutation for OneLine {
+impl Mapping for OneLine {
     fn apply(&self, v: u8) -> u8 {
         if v > 0 && v <= self.0.len() as u8 {
             self.0[v as usize - 1]
@@ -39,7 +39,9 @@ impl Permutation for OneLine {
     fn order(&self) -> u8 {
         self.0.len() as u8
     }
+}
 
+impl Composable for OneLine {
     fn compose(&self, right: &Self) -> Self {
         let ord = self.order().max(right.order());
         let mut data: Box<[u8]> = new_boxed_slice(ord as usize);
