@@ -1,3 +1,5 @@
+use std::usize;
+
 use crate::traits::*;
 
 #[derive(Debug, PartialEq)]
@@ -10,6 +12,18 @@ pub fn new_boxed_slice(size: usize) -> Box<[u8]> {
 impl OneLine {
     pub fn new(data: Vec<u8>) -> Self {
         OneLine(data.into_boxed_slice())
+    }
+
+    pub fn validate(&self) {
+        if self.order() == 0 { return; }
+
+        let mut seen = self.0.iter().map(|_| false).collect::<Vec<bool>>();
+        for i in self.0.iter() {
+            if *i == 0 || *i > self.order() || seen[*i as usize - 1] {
+                panic!(format!("Invalid OneLine: {:?}", self))
+            }
+            seen[*i as usize - 1] = true;
+        }
     }
 }
 
