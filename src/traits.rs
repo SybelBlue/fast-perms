@@ -6,9 +6,9 @@ pub trait Mapping {
     fn order(&self) -> u8;
 }
 
-pub trait Composable {
+pub trait Composable<Result : Mapping> {
     /// Composes self on the left of `right`, returns
-    fn compose(&self, right: &Self) -> Self;
+    fn compose(&self, right: &Self) -> Result;
 }
 
 pub trait Invertible {

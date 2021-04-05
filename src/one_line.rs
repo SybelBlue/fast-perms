@@ -1,6 +1,6 @@
 use std::usize;
 
-use crate::{involution::*, traits::*, utils::new_boxed_slice};
+use crate::{involution::*, traits::*, utils::{new_boxed_slice, super_perm6}};
 
 #[derive(Debug, PartialEq, Clone)]
 pub struct OneLine(pub Box<[u8]>);
@@ -37,8 +37,8 @@ impl Mapping for OneLine {
     }
 }
 
-impl Composable for OneLine {
-    fn compose(&self, right: &Self) -> Self {
+impl Composable<OneLine> for OneLine {
+    fn compose(&self, right: &Self) -> OneLine {
         let ord = self.order().max(right.order());
         let mut data: Box<[u8]> = new_boxed_slice(ord as usize);
         for (i, d) in data.iter_mut().enumerate() {
@@ -68,5 +68,37 @@ impl FromInvolutions for OneLine {
     fn from_involutions(left: &Involution, right: &Involution) -> Self {
         let ord = left.order().max(right.order());
         OneLine::new((1..=ord).map(|v| left.apply(right.apply(v))).collect())
+    }
+}
+
+#[derive(Debug, PartialEq)]
+pub struct OneLineSlice(pub &'static [u8]);
+
+impl Mapping for OneLineSlice {
+    fn apply(&self, v: u8) -> u8 {
+        if v > 0 && v <= self.0.len() as u8 {
+            self.0[v as usize - 1]
+        } else {
+            v
+        }
+    }
+
+    fn order(&self) -> u8 {
+        self.0.len() as u8
+    }
+}
+
+impl Identity for OneLineSlice {
+    fn identity(ord: u8) -> Self {
+        if ord > 6 {
+            todo!("ord 7 and greater Slices don't exist")
+        } else {
+            OneLineSlice(&super_perm6[0..ord as usize])
+        }
+    }
+
+    /// O(n)
+    fn is_identity(&self) -> bool {
+        self.0.as_ptr() == &super_perm6[0]
     }
 }
