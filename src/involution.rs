@@ -135,3 +135,12 @@ impl Identity for SwapSeq {
         self.0.len() == 0
     }
 }
+
+impl FromInvolutions for SwapSeq {
+    fn from_involutions(left: &Involution, right: &Involution) -> Self {
+        let mut v = VecDeque::with_capacity(2);
+        v.push_back(left.clone());
+        v.push_back(right.clone());
+        SwapSeq(v)
+    }
+}
