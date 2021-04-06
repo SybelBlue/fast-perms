@@ -1,4 +1,4 @@
-use std::{collections::VecDeque, fmt::Display, cmp::*};
+use std::{cmp::*, collections::VecDeque, fmt::Display, ops::{Mul, MulAssign}};
 
 use crate::{one_line::OneLine, traits::{Identity, Mapping}};
 
@@ -86,10 +86,8 @@ impl SwapSeq {
             },
             2 => OneLine::from_involutions(&data[0], &data[1]),
             _ => {
-                println!("{:?}", self);
                 let mut perm = OneLine::identity(self.order());
                 for swap in data {
-                    println!("{:?} {}", perm, swap);
                     perm.compose_swap_right(swap);
                 }
                 perm
@@ -98,8 +96,8 @@ impl SwapSeq {
     }
 }
 
-impl std::ops::Mul<Swap> for SwapSeq {
-    type Output = SwapSeq;
+impl Mul<Swap> for SwapSeq {
+    type Output = Self;
 
     fn mul(self, rhs: Swap) -> Self::Output {
         let mut out = self.clone();
@@ -108,13 +106,19 @@ impl std::ops::Mul<Swap> for SwapSeq {
     }
 }
 
-impl std::ops::Mul<SwapSeq> for Swap {
+impl Mul<SwapSeq> for Swap {
     type Output = SwapSeq;
 
     fn mul(self, rhs: SwapSeq) -> Self::Output {
         let mut out = rhs.clone();
         out.compose_left(self);
         out
+    }
+}
+
+impl MulAssign<Swap> for SwapSeq {
+    fn mul_assign(&mut self, rhs: Swap) {
+        self.compose_right(rhs);
     }
 }
 
