@@ -1,6 +1,6 @@
 use std::{collections::VecDeque, fmt::Display};
 
-use crate::traits::Mapping;
+use crate::traits::{Identity, Mapping};
 
 #[derive(Debug, PartialEq, Clone, Copy)]
 pub struct Involution(u8, u8);
@@ -61,5 +61,15 @@ impl Mapping for InvlSeq {
 
     fn order(&self) -> u8 {
         self.0.iter().map(|inv| inv.order()).max().unwrap_or(1)
+    }
+}
+
+impl Identity for InvlSeq {
+    fn identity(_ord: u8) -> Self {
+        InvlSeq::new()
+    }
+
+    fn is_identity(&self) -> bool {
+        self.0.len() == 0
     }
 }
