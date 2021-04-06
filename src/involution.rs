@@ -1,6 +1,6 @@
 use std::{collections::VecDeque, fmt::Display, cmp::*};
 
-use crate::traits::{Identity, Mapping};
+use crate::{one_line::OneLine, traits::{Identity, Mapping}};
 
 #[derive(Debug, PartialEq, Eq, PartialOrd, Ord, Clone, Copy)]
 pub struct Involution(u8, u8);
@@ -75,39 +75,44 @@ impl SwapSeq {
         self.0.push_back(other);
     }
 
-    pub fn reduce(&mut self) {
-        let mut out: VecDeque<Swap> = VecDeque::with_capacity(self.0.len());
-        for curr in self.0.iter().rev() {
-            if out.is_empty() {
-                out.push_back(*curr);
-                continue;
-            }
-            let mut i = 0;
-            loop {
-                let item = out[i];
-                
-                // if found identical cycle, remove both
-                if curr == &item {
-                    out.remove(i);
-                    break;
+    pub fn evaluate(&self) -> OneLine {
+        let data = &self.0;
+        match data.len() {
+            0 => OneLine::identity(1),
+            1 => {
+                let mut out = OneLine::identity(data[0].order());
+                out.compose_swap_right(&data[0]);
+                out
+            },
+            2 => OneLine::from_involutions(&data[0], &data[1]),
+            _ => {
+                let mut perm = OneLine::identity(self.order());
+                for swap in data {
+                    perm.compose_swap_right(swap);
                 }
-                // if found non-traversable cycle, stop here and insert
-                if curr.overlaps(&item) {
-                    out.insert(i, *curr);
-                    break;
-                }
-                
-                // otherwise advance past the item
-                i += 1;
-                
-                // if no matches in out, just push to the back
-                if i == out.len() {
-                    out.push_back(*curr);
-                    break;
-                }
+                perm
             }
         }
-        self.0 = out;
+    }
+}
+
+impl std::ops::Mul<Involution> for SwapSeq {
+    type Output = SwapSeq;
+
+    fn mul(self, rhs: Involution) -> Self::Output {
+        let mut out = self.clone();
+        out.compose_right(rhs);
+        out
+    }
+}
+
+impl std::ops::Mul<SwapSeq> for Involution {
+    type Output = SwapSeq;
+
+    fn mul(self, rhs: SwapSeq) -> Self::Output {
+        let mut out = rhs.clone();
+        out.compose_left(self);
+        out
     }
 }
 
