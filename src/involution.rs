@@ -3,13 +3,13 @@ use std::{collections::VecDeque, fmt::Display, cmp::*};
 use crate::{one_line::OneLine, traits::{Identity, Mapping}};
 
 #[derive(Debug, PartialEq, Eq, PartialOrd, Ord, Clone, Copy)]
-pub struct Involution(u8, u8);
+pub struct Swap(u8, u8);
 
-pub type Swap = Involution;
+pub type Involution = Swap;
 
-impl Involution {
+impl Swap {
     pub fn new(a: u8, b: u8) -> Self {
-        Involution(a.min(b), a.max(b))
+        Swap(a.min(b), a.max(b))
     }
 
     pub fn contains(&self, x: u8) -> bool {
@@ -33,13 +33,13 @@ impl Involution {
     }
 }
 
-impl Display for Involution {
+impl Display for Swap {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "({} {})", self.0, self.1)
     }
 }
 
-impl Mapping for Involution {
+impl Mapping for Swap {
     fn apply(&self, v: u8) -> u8 {
         if v == self.0 {
             self.1
@@ -56,22 +56,22 @@ impl Mapping for Involution {
 }
 
 pub trait FromInvolutions {
-    fn from_involutions(left: &Involution, right: &Involution) -> Self;
+    fn from_involutions(left: &Swap, right: &Swap) -> Self;
 }
 
 #[derive(Debug, PartialEq, Clone)]
-pub struct SwapSeq(VecDeque<Involution>);
+pub struct SwapSeq(VecDeque<Swap>);
 
 impl SwapSeq {
     pub fn new() -> Self {
         Self(VecDeque::with_capacity(4))
     }
 
-    pub fn compose_left(&mut self, other: Involution) {
+    pub fn compose_left(&mut self, other: Swap) {
         self.0.push_front(other);
     }
 
-    pub fn compose_right(&mut self, other: Involution) {
+    pub fn compose_right(&mut self, other: Swap) {
         self.0.push_back(other);
     }
 
@@ -96,17 +96,17 @@ impl SwapSeq {
     }
 }
 
-impl std::ops::Mul<Involution> for SwapSeq {
+impl std::ops::Mul<Swap> for SwapSeq {
     type Output = SwapSeq;
 
-    fn mul(self, rhs: Involution) -> Self::Output {
+    fn mul(self, rhs: Swap) -> Self::Output {
         let mut out = self.clone();
         out.compose_right(rhs);
         out
     }
 }
 
-impl std::ops::Mul<SwapSeq> for Involution {
+impl std::ops::Mul<SwapSeq> for Swap {
     type Output = SwapSeq;
 
     fn mul(self, rhs: SwapSeq) -> Self::Output {
@@ -137,7 +137,7 @@ impl Identity for SwapSeq {
 }
 
 impl FromInvolutions for SwapSeq {
-    fn from_involutions(left: &Involution, right: &Involution) -> Self {
+    fn from_involutions(left: &Swap, right: &Swap) -> Self {
         let mut v = VecDeque::with_capacity(2);
         v.push_back(left.clone());
         v.push_back(right.clone());

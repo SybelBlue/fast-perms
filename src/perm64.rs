@@ -1,4 +1,4 @@
-use crate::{involution::{FromInvolutions, Involution}, traits::{Composable, Identity, Mapping}};
+use crate::{involution::{FromInvolutions, Swap}, traits::{Composable, Identity, Mapping}};
 
 /// OneLine representation for < S16
 /// Each nibble is an entry ie:
@@ -40,7 +40,7 @@ impl Composable<Perm64> for Perm64 {
 }
 
 impl FromInvolutions for Perm64 {
-    fn from_involutions(left: &Involution, right: &Involution) -> Self {
+    fn from_involutions(left: &Swap, right: &Swap) -> Self {
         let mut data = 0;
         for i in 1..=16 {
             data |= (left.apply(right.apply(i)) as u64 - 1) << (4 * (i - 1));

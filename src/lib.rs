@@ -9,7 +9,7 @@ pub mod perm64;
 #[cfg(test)]
 mod test {
     mod one_line {
-        use crate::{involution::{FromInvolutions, Involution}, one_line::*};
+        use crate::{involution::{FromInvolutions, Swap}, one_line::*};
         use crate::traits::*;
 
         #[test]
@@ -41,14 +41,24 @@ mod test {
         #[test]
         fn from_involutions() {
             assert_eq!(
-                OneLine::from_involutions(&Involution::new(1, 2), &Involution::new(2, 3)),
+                OneLine::from_involutions(&Swap::new(1, 2), &Swap::new(2, 3)),
                 OneLine(Box::new([2, 3, 1]))
             );
             assert_eq!(
-                OneLine::from_involutions(&Involution::new(1, 2), &Involution::new(1, 3)),
+                OneLine::from_involutions(&Swap::new(1, 2), &Swap::new(1, 3)),
                 OneLine(Box::new([3, 1, 2]))
             );
-            assert_eq!(OneLine::from_involutions(&Involution::new(1, 3), &Involution::new(1, 3)), OneLine::identity(3));
+            assert_eq!(OneLine::from_involutions(&Swap::new(1, 3), &Swap::new(1, 3)), OneLine::identity(3));
+        }
+    }
+
+    mod swap_seq {
+        use crate::{involution::*, one_line::OneLine, traits::Identity};
+
+        #[test]
+        fn mul() {
+            let swap_perm = SwapSeq::identity(4) * Swap::new(1, 2) * Swap::new(2, 3) * Swap::new(3, 4);
+            assert_eq!(OneLine::new(vec![2, 3, 4, 1]), swap_perm.evaluate());
         }
     }
 }

@@ -11,7 +11,7 @@ impl OneLine {
     }
 
     /// performs self * swap (right composition)
-    pub fn compose_swap_right(&mut self, swap: &Involution) {
+    pub fn compose_swap_right(&mut self, swap: &Swap) {
         if swap.order() < self.order() {
             let data = self.0.as_mut();
             let (x, y) = swap.into_tuple();
@@ -68,7 +68,7 @@ impl Identity for OneLine {
 }
 
 impl FromInvolutions for OneLine {
-    fn from_involutions(left: &Involution, right: &Involution) -> Self {
+    fn from_involutions(left: &Swap, right: &Swap) -> Self {
         let ord = left.order().max(right.order());
         OneLine::new((1..=ord).map(|v| left.apply(right.apply(v))).collect())
     }
