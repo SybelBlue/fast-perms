@@ -45,11 +45,21 @@ impl InvlSeq {
         InvlSeq(VecDeque::with_capacity(4))
     }
 
-    pub fn composeLeft(&mut self, other: Involution) {
+    pub fn compose_left(&mut self, other: Involution) {
         self.0.push_front(other);
     }
 
-    pub fn composeRight(&mut self, other: Involution) {
+    pub fn compose_right(&mut self, other: Involution) {
         self.0.push_back(other);
+    }
+}
+
+impl Mapping for InvlSeq {
+    fn apply(&self, v: u8) -> u8 {
+        self.0.iter().rev().fold(v, |x, inv| inv.apply(x))
+    }
+
+    fn order(&self) -> u8 {
+        self.0.iter().map(|inv| inv.order()).max().unwrap_or(1)
     }
 }
