@@ -1,6 +1,6 @@
 use std::usize;
 
-use crate::{involution::*, traits::*, group_generators::{new_boxed_slice, SUPER_PERM6}};
+use crate::{involution::*, traits::*, group_generators::SUPER_PERM6};
 
 #[derive(Debug, PartialEq, Clone)]
 pub struct OneLine(pub Box<[u8]>);
@@ -8,6 +8,20 @@ pub struct OneLine(pub Box<[u8]>);
 impl OneLine {
     pub fn new(data: Vec<u8>) -> Self {
         OneLine(data.into_boxed_slice())
+    }
+
+    /// performs self * swap (right composition)
+    pub fn compose_swap_right(&mut self, swap: &Involution) {
+        if swap.order() < self.order() {
+            let data = self.0.as_mut();
+            let (x, y) = swap.into_tuple();
+            let temp = data[x as usize];
+            data[x as usize] = data[y as usize];
+            data[y as usize] = temp;
+        } else {
+            let order = self.order().max(swap.order());
+            self.0 = (1..=order).map(|i| self.apply(swap.apply(i))).collect::<Vec<u8>>().into_boxed_slice();
+        }
     }
 
     pub fn validate(&self) {
@@ -63,11 +77,7 @@ impl FromInvolutions for OneLine {
 impl<T> Composable<OneLine> for T where T : Mapping {
     fn compose(&self, right: &Self) -> OneLine {
         let ord = self.order().max(right.order());
-        let mut data: Box<[u8]> = new_boxed_slice(ord as usize);
-        for (i, d) in data.iter_mut().enumerate() {
-            *d = self.apply(right.apply(i as u8 + 1));
-        }
-        OneLine(data)
+        OneLine((1..=ord).map(|i| self.apply(right.apply(i))).collect::<Vec<u8>>().into_boxed_slice())
     }
 }
 
