@@ -3,13 +3,13 @@ pub mod traits;
 pub mod group_generators;
 
 pub mod one_line;
-pub mod involution;
+pub mod swap;
 pub mod perm64;
 
 #[cfg(test)]
 mod test {
     mod one_line {
-        use crate::{involution::{FromInvolutions, Swap}, one_line::*};
+        use crate::{swap::{FromInvolutions, Swap}, one_line::*};
         use crate::traits::*;
 
         #[test]
@@ -53,7 +53,7 @@ mod test {
     }
 
     mod swap_seq {
-        use crate::{involution::*, one_line::OneLine, traits::Identity};
+        use crate::{swap::*, one_line::OneLine, traits::Identity};
 
         #[test]
         fn mul() {

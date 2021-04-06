@@ -1,4 +1,4 @@
-use crate::{involution::{FromInvolutions, Swap}, traits::{Composable, Identity, Mapping}};
+use crate::{swap::{FromInvolutions, Swap}, traits::{Composable, Identity, Mapping}};
 
 /// OneLine representation for < S16
 /// Each nibble is an entry ie:
