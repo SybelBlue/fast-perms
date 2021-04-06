@@ -1,4 +1,4 @@
-use std::fmt::Display;
+use std::{collections::VecDeque, fmt::Display};
 
 use crate::traits::Mapping;
 
@@ -38,5 +38,18 @@ pub trait FromInvolutions {
 }
 
 #[derive(Debug, PartialEq, Clone)]
-pub struct InvlSeq(Vec<Involution>);
+pub struct InvlSeq(VecDeque<Involution>);
 
+impl InvlSeq {
+    pub fn new() -> Self {
+        InvlSeq(VecDeque::with_capacity(4))
+    }
+
+    pub fn composeLeft(&mut self, other: Involution) {
+        self.0.push_front(other);
+    }
+
+    pub fn composeRight(&mut self, other: Involution) {
+        self.0.push_back(other);
+    }
+}

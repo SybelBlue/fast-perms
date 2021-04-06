@@ -20,7 +20,12 @@ impl Mapping for Perm64 {
     }
 
     fn order(&self) -> u8 {
-        16
+        for i in (0..16).rev() {
+            if ((self.0 >> (4 * i)) & 0xF) != i {
+                return i + 1;
+            }
+        }
+        1
     }
 }
 
