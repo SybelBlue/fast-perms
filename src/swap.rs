@@ -86,8 +86,10 @@ impl SwapSeq {
             },
             2 => OneLine::from_involutions(&data[0], &data[1]),
             _ => {
+                println!("{:?}", self);
                 let mut perm = OneLine::identity(self.order());
                 for swap in data {
+                    println!("{:?} {}", perm, swap);
                     perm.compose_swap_right(swap);
                 }
                 perm

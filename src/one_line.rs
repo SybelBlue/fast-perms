@@ -14,10 +14,12 @@ impl OneLine {
     pub fn compose_swap_right(&mut self, swap: &Swap) {
         if swap.order() < self.order() {
             let data = self.0.as_mut();
-            let (x, y) = swap.into_tuple();
-            let temp = data[x as usize];
-            data[x as usize] = data[y as usize];
-            data[y as usize] = temp;
+            let (l, h) = swap.into_tuple();
+            let x = l as usize - 1;
+            let y = h as usize - 1;
+            let temp = data[x];
+            data[x] = data[y];
+            data[y] = temp;
         } else {
             let order = self.order().max(swap.order());
             self.0 = (1..=order).map(|i| self.apply(swap.apply(i))).collect::<Vec<u8>>().into_boxed_slice();
