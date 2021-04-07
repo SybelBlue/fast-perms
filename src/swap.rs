@@ -67,6 +67,26 @@ impl SwapSeq {
         Self(VecDeque::with_capacity(4))
     }
 
+    pub fn from_cycle_notation(cycles: Vec<Vec<u8>>) -> Self {
+        let mut out = VecDeque::with_capacity(8);
+        for cyc in cycles {
+            if cyc.len() < 2 { continue; }
+
+            out.push_back(Swap::new(cyc[0], cyc[cyc.len() - 1]));
+            
+            if cyc.len() > 2 {
+                let mut last = None;
+                for x in cyc {
+                    if let Some(l) = last {
+                        out.push_back(Swap::new(l, x));
+                    }
+                    last = Some(x);
+                }
+            }
+        }
+        Self(out)
+    }
+
     pub fn compose_left(&mut self, other: Swap) {
         self.0.push_front(other);
     }
@@ -124,7 +144,7 @@ impl MulAssign<Swap> for SwapSeq {
 
 impl Mapping for SwapSeq {
     fn apply(&self, v: u8) -> u8 {
-        self.0.iter().rev().fold(v, |x, inv| inv.apply(x))
+        self.0.iter().rev().fold(v, |x, swap| swap.apply(x))
     }
 
     fn order(&self) -> u8 {
