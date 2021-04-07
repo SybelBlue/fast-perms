@@ -68,23 +68,19 @@ impl SwapSeq {
     }
 
     pub fn from_cycle_notation(cycles: Vec<Vec<u8>>) -> Self {
-        let mut out = VecDeque::with_capacity(8);
+        let mut out = Self(VecDeque::with_capacity(8));
         for cyc in cycles {
             if cyc.len() < 2 { continue; }
-
-            out.push_back(Swap::new(cyc[0], cyc[cyc.len() - 1]));
             
-            if cyc.len() > 2 {
-                let mut last = None;
-                for x in cyc {
-                    if let Some(l) = last {
-                        out.push_back(Swap::new(l, x));
-                    }
-                    last = Some(x);
+            let mut last = None;
+            for &x in cyc.iter() {
+                if let Some(l) = last {
+                    out *= Swap::new(l, x);
                 }
+                last = Some(x);
             }
         }
-        Self(out)
+        out
     }
 
     pub fn compose_left(&mut self, other: Swap) {

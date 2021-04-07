@@ -53,16 +53,21 @@ mod test {
     }
 
     mod swap_seq {
-        use crate::{swap::*, one_line::OneLine, traits::Identity};
+        use crate::{swap::*, one_line::OneLine};
 
         #[test]
-        fn mul() {
-            let mut swap_perm = SwapSeq::identity(4) * Swap::new(1, 2) * Swap::new(2, 3) * Swap::new(3, 4);
+        fn mul_evaluate() {
+            let mut swap_perm = SwapSeq::new() * Swap::new(1, 2) * Swap::new(2, 3) * Swap::new(3, 4);
             assert_eq!(OneLine::new(vec![2, 3, 4, 1]), swap_perm.evaluate());
             swap_perm *= Swap::new(4, 5);
             assert_eq!(OneLine::new(vec![2, 3, 4, 5, 1]), swap_perm.evaluate());
             swap_perm.compose_left(Swap::new(4, 5));
             assert_eq!(OneLine::new(vec![2, 3, 5, 4, 1]), swap_perm.evaluate());
+        }
+
+        #[test]
+        fn from_cycle_notation() {
+            assert_eq!(OneLine::new(vec![2, 3, 1, 5, 4]), SwapSeq::from_cycle_notation(vec![vec![1, 2, 3], vec![4, 5]]).evaluate());
         }
     }
 }
